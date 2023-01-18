@@ -108,8 +108,18 @@ function build(d) {
 
 <style>
 .exchange-app {
+  font-family: adelle_sansregular, "Adelle Sans";
+  font-size: 16px;
+  line-height: 1.3;
+  margin-block: 40px;
+  border-top: 3px solid #4d6711;
   --import: #d9d4b6;
   --export: #404040;
+}
+h2 {
+  font-size: 1.4em;
+  margin-bottom: 1em;
+  font-family: tiempos_regular, "Tiempos Headline";
 }
 .exchange {
   display: flex;
@@ -143,8 +153,13 @@ function build(d) {
   border-top-right-radius: 99px;
   border-bottom-right-radius: 99px;
 }
-h3, p {
-  margin: 0 0 5px;
+h3 {
+  margin: 0 0 .1em;
+  font-size: 1.1em;
+}
+p {
+  margin: 0;
+  line-height: 1.3;
 }
 .twh {
   font-weight: bold;
@@ -174,6 +189,7 @@ h3, p {
   font-size: .8em;
   color: #404040;
   content: "1. jan.";
+  line-height: 1;
 }
 .day:last-of-type::before {
   position: absolute;
@@ -184,6 +200,7 @@ h3, p {
   font-size: .8em;
   color: #404040;
   content: "18. jan.";
+  line-height: 1;
 }
 .bar {
   position: absolute;
@@ -205,8 +222,9 @@ h3, p {
   filter:opacity(0.7)
 }
 .meta {
-  margin-top: 40px;
-  font-size: 0.9em;
+  margin-top: 35px;
+  font-size: .9em;
+  color: #999;
 }
 /* .import::before {
   position: absolute;
