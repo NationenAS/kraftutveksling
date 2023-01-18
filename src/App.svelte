@@ -29,7 +29,6 @@ onMount(async () => {
   fetch("https://statnett-utveksling.vercel.app/api")
     .then(r => r.json())
     .then(d => {
-      console.log(d.data)
       build(d.data)
     })
     .catch(e => { console.log(e) })
@@ -60,13 +59,7 @@ function build(d) {
       zero: zero
     }
   }
-  console.log(data)
 }
-
-/* function localDate(utc) {
-  let d = new Date(utc)
-  return d.toLocaleDateString()
-} */
 
 </script>
 

@@ -6,12 +6,12 @@
 	
 	function mouseOver(event) {
 		isHovered = true
-		x = event.pageX
-		y = event.pageY
+		x = event.clientX
+		y = event.clientY
 	}
 	function mouseMove(event) {
-		x = event.pageX
-		y = event.pageY
+		x = event.clientX
+		y = event.clientY
 	}
 	function mouseLeave() {
 		isHovered = false
