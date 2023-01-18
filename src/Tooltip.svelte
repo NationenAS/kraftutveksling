@@ -27,11 +27,11 @@
 </div>
 
 {#if isHovered}
-<div style="top: {y + 20}px; left: {x}px;">{title}</div>
+<div style="top: {y + 20}px; left: {x}px;" class="ttip">{title}</div>
 {/if}
 
 <style>
-div {
+.ttip {
     background: #404040;
     font-size: .9em;
     color: white;
