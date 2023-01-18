@@ -27,18 +27,18 @@
 </div>
 
 {#if isHovered}
-<div style="top: {y + 20}px; left: {x}px;" class="tooltip">{title}</div>
+<div style="top: {y + 20}px; left: {x}px;">{title}</div>
 {/if}
 
 <style>
-	.tooltip {
-		background: #404040;
-        font-size: .9em;
-        color: white;
-		border-radius: 99px;
-		padding: 6px 8px;
-		position: fixed;
-        z-index: 10000;
-        transform: translateX(-50%);
-	}
+div {
+    background: #404040;
+    font-size: .9em;
+    color: white;
+    border-radius: 99px;
+    padding: 6px 8px;
+    position: fixed;
+    z-index: 10000;
+    transform: translateX(-50%);
+}
 </style>
