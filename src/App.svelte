@@ -65,7 +65,7 @@ function build(d) {
 
 <div class="exchange-app">
   <h2>Live: Kraftutveksling med utlandet hittil i år</h2>
-  <p>Til sammenlikning var det totale forbruket av strøm 139,5 TWh i 2021.</p>
+  <p>Grafene viser hvor mye strøm som har blitt sendt og mottat gjennom utenlandskablene så langt i 2023.</p>
   <div class=exchange>
     <div>
       <h3>Eksport</h3>
@@ -84,7 +84,7 @@ function build(d) {
   </div>
   <div class="exchange-per-day" style="--zero: {data.css.zero}%">
     <h3>Balanse per dag</h3>
-    <p>Mørke stolper betyr at det er eksportert mer enn det er importert denne dagen.</p>
+    <p>En mørk stolpe betyr at det er eksportert mer enn det er importert denne dagen.</p>
     <div class="days">
       {#each data.points as point, i}
       <div class="day">
@@ -96,7 +96,7 @@ function build(d) {
     </div>
   </div>
   <div class="meta">
-    1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Kilde: Statnett.
+    1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
   </div>
 </div>
 
