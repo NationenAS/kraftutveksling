@@ -27,7 +27,7 @@
 </div>
 
 {#if isHovered}
-	<div style="top: {y + 20}px; left: {x}px;" class="tooltip">{title}</div>
+<div style="top: {y + 20}px; left: {x}px;" class="tooltip">{title}</div>
 {/if}
 
 <style>
@@ -38,7 +38,7 @@
 		border-radius: 99px;
 		padding: 6px 8px;
 		position: fixed;
-        z-index: 1000;
+        z-index: 10000;
         transform: translateX(-50%);
 	}
 </style>

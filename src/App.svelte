@@ -72,6 +72,7 @@ function build(d) {
 
 <div class="exchange-app">
   <h2>Live: Kraftutveksling med utlandet hittil i år</h2>
+  <p>Til sammenlikning var det totale forbruket av strøm 139,5 TWh i 2021.</p>
   <div class=exchange>
     <div>
       <h3>Eksport</h3>
@@ -85,7 +86,7 @@ function build(d) {
     </div>
     <div>
       <h3>Import</h3>
-      <div class="twh">{(data.summarised.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
+      <div>{(data.summarised.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
     </div>
   </div>
   <div class="exchange-per-day" style="--zero: {data.css.zero}%">
@@ -102,7 +103,7 @@ function build(d) {
     </div>
   </div>
   <div class="meta">
-    Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Kilde: Statnett.
+    1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Kilde: Statnett.
   </div>
 </div>
 
@@ -118,12 +119,13 @@ function build(d) {
 }
 h2 {
   font-size: 1.4em;
-  margin-bottom: 1em;
+  margin-bottom: .5em;
   font-family: tiempos_regular, "Tiempos Headline";
 }
 .exchange {
   display: flex;
   gap: 20px;
+  margin-top: 30px;
 }
 .percentage {
   flex: 1;
@@ -160,9 +162,6 @@ h3 {
 p {
   margin: 0;
   line-height: 1.3;
-}
-.twh {
-  font-weight: bold;
 }
 .exchange-per-day {
   margin-top: 30px;
@@ -222,7 +221,7 @@ p {
   filter:opacity(0.7)
 }
 .meta {
-  margin-top: 35px;
+  margin-top: 40px;
   font-size: .9em;
   color: #999;
 }
