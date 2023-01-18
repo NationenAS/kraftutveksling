@@ -135,6 +135,7 @@ h2 {
   justify-content: flex-start;
   align-items: center;
   transition: .5s ease-out;
+  line-height: 1;
 }
 .export {
   background: var(--export);
@@ -165,7 +166,6 @@ p {
   gap: 1%;
   height: 150px;
   margin-top: 15px;
-  padding-right: 55px;
   position: relative;
 }
 .day {
