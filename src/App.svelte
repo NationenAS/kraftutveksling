@@ -82,12 +82,12 @@ function build(d) {
       <div>{(data.summarised.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
     </div>
   </div>
-  <div class="exchange-per-day" style="--zero: {data.css.zero}%">
+  <div class="exchange-per-day" style="--zero: {data.css.zero}%;">
     <h3>Balanse per dag</h3>
     <p>En mørk stolpe betyr at det er eksportert mer enn det er importert denne dagen.</p>
     <div class="days">
       {#each data.points as point, i}
-      <div class="day">
+      <div class="day" data-date="{point.d}">
         <Tooltip title="{point.d}: {(point.a).toLocaleString(undefined, { maximumFractionDigits: 0 })} MWh">
           <div class="bar {point.c}" style="height: {point.h}%;" transition:slide="{{ delay: 50 * i, duration: 1000 }}"></div>
         </Tooltip>
@@ -180,7 +180,7 @@ p {
   width: 100px;
   font-size: .8em;
   color: #404040;
-  content: "1. jan.";
+  content: attr(data-date);
   line-height: 1;
 }
 .day:last-of-type::before {
@@ -191,7 +191,7 @@ p {
   width: 100px;
   font-size: .8em;
   color: #404040;
-  content: "18. jan.";
+  content: attr(data-date);
   line-height: 1;
 }
 .bar {
