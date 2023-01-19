@@ -65,7 +65,7 @@ function build(d) {
 
 <div class="exchange-app">
   <h2>Live: Kraftutveksling med utlandet hittil i år</h2>
-  <p>Grafene viser hvor mye strøm som har blitt sendt og mottat gjennom utenlandskablene så langt i 2023.</p>
+  <p>Grafene viser hvor mye strøm som har blitt sendt og mottatt gjennom utenlandskablene så langt i 2023.</p>
   <div class=exchange>
     <div>
       <h3>Eksport</h3>
