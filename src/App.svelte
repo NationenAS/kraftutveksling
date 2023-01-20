@@ -1,8 +1,8 @@
 <script>
   
 import { onMount } from "svelte";
-import Tooltip from "./Tooltip.svelte";
-import { slide } from 'svelte/transition';
+import Timeline from "./Timeline.svelte";
+import Countries from "./Countries.svelte";
 
 $: data = {
   points: [],
@@ -23,18 +23,23 @@ $: data = {
     zero: 0
   }
 }
+$: countries = []
 
 // Get data
 onMount(async () => {
   fetch("https://statnett-utveksling.vercel.app/api")
     .then(r => r.json())
     .then(d => {
-      build(d.data)
+      all(d.data)
     })
-    .catch(e => { console.log(e) })
+  fetch("https://statnett-utveksling.vercel.app/api/countries")
+    .then(r => r.json())
+    .then(d => {
+      individual(d)
+    })
 })
 
-function build(d) {
+function all(d) {
   let span = d.SidebarViewModel.max + Math.abs(d.SidebarViewModel.min)
   let zero = d.SidebarViewModel.max / span * 100
   function absToBar(value, index, start) {
@@ -60,6 +65,9 @@ function build(d) {
     }
   }
 }
+function individual(d) {
+  countries = d
+}
 
 </script>
 
@@ -82,18 +90,14 @@ function build(d) {
       <div>{(data.summarised.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
     </div>
   </div>
-  <div class="exchange-per-day" style="--zero: {data.css.zero}%;">
-    <h3>Balanse per dag</h3>
-    <p>En mørk stolpe betyr at det er eksportert mer enn det er importert denne dagen.</p>
-    <div class="days">
-      {#each data.points as point, i}
-      <div class="day" data-date="{point.d}">
-        <Tooltip title="{point.d}: {(point.a).toLocaleString(undefined, { maximumFractionDigits: 0 })} MWh">
-          <div class="bar {point.c}" style="height: {point.h}%;" transition:slide="{{ delay: 50 * i, duration: 1000 }}"></div>
-        </Tooltip>
-      </div>
-      {/each}
-    </div>
+  <Timeline data={data} />
+  <div class="exchange-per-country">
+    <h3>Utveksling per land</h3>
+    {#if countries.length == 0}
+    <div><p>Laster land...</p></div>
+    {:else}
+    <Countries data={countries} all={data} />
+    {/if}
   </div>
   <div class="meta">
     1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
@@ -149,82 +153,20 @@ h2 {
   border-top-right-radius: 99px;
   border-bottom-right-radius: 99px;
 }
-h3 {
+:global(h3) {
   margin: 0 0 .1em;
   font-size: 1.1em;
 }
-p {
+:global(p) {
   margin: 0;
   line-height: 1.3;
 }
-.exchange-per-day {
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-.days {
-  display: flex;
-  gap: 1%;
-  height: 150px;
-  margin-top: 15px;
-  position: relative;
-}
-.day {
-  flex: 1;
-  height: 100%;
-  max-width: 20px;
-  position: relative;
-}
-.day:first-child::before {
-  position: absolute;
-  bottom: -20px;
-  width: 100px;
-  font-size: .8em;
-  color: #404040;
-  content: attr(data-date);
-  line-height: 1;
-}
-.day:last-of-type::before {
-  position: absolute;
-  bottom: -20px;
-  right: 0;
-  text-align: right;
-  width: 100px;
-  font-size: .8em;
-  color: #404040;
-  content: attr(data-date);
-  line-height: 1;
-}
-.bar {
-  position: absolute;
-  top: var(--zero);
-  width: 100%;
-}
-.bar.pos {
-  background: var(--export);
-  transform: translateY(-100%);
-  border-top-left-radius: 99px;
-  border-top-right-radius: 99px;
-}
-.bar.neg {
-  background: var(--import);
-  border-bottom-left-radius: 99px;
-  border-bottom-right-radius: 99px;
-}
-.bar:hover {
-  filter:opacity(0.7)
+.exchange-per-country {
+  margin-top: 40px;
 }
 .meta {
-  margin-top: 40px;
+  margin-top: 30px;
   font-size: .9em;
   color: #999;
 }
-/* .import::before {
-  position: absolute;
-  top: -3px;
-  left: 0;
-  width: 2px;
-  background: white;
-  height: calc(100% + 6px);
-  content: "";
-} */
 </style>
