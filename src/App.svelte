@@ -153,11 +153,11 @@ h2 {
   border-top-right-radius: 99px;
   border-bottom-right-radius: 99px;
 }
-:global(h3) {
+:global(.exchange-app h3) {
   margin: 0 0 .1em;
   font-size: 1.1em;
 }
-:global(p) {
+:global(.exchange-app p) {
   margin: 0;
   line-height: 1.3;
 }
