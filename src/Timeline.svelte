@@ -7,15 +7,15 @@ export let data
     <h3>Balanse per dag</h3>
     <p>En mørk stolpe betyr at det er eksportert mer enn det er importert denne dagen.</p>
     <div class="days">
-      {#each data.points as point, i}
-      <div class="day" data-date="{point.d}">
+        {#each data.points as point, i}
+        <div class="day" data-date="{point.d}">
         <Tooltip title="{point.d}: {(point.a).toLocaleString(undefined, { maximumFractionDigits: 0 })} MWh">
-          <div class="bar {point.c}" style="height: {point.h}%;" transition:slide="{{ delay: 50 * i, duration: 1000 }}"></div>
+            <div class="bar {point.c}" style="height: {point.h}%;" transition:slide="{{ delay: 50 * i, duration: 1000 }}"></div>
         </Tooltip>
-      </div>
-      {/each}
+        </div>
+        {/each}
     </div>
-  </div>
+</div>
 
 <style>
 .exchange-per-day {
