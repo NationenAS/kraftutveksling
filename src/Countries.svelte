@@ -17,16 +17,15 @@ let sumImport = importValues.reduce((a, b) => { return a + b }, 0)
 const ticks = (max) => { // REFACTOR
     let t = []
     let twh =  max / 1000000
-    if (twh > 0.5 && twh < 0.75) t = [0.25, 0.5]
-    else if (twh >= 0.75 && twh < 1) t = [0.25, 0.5, 0.75]
-    else if (twh >= 1 && twh < 1.5) t = [0.5, 1]
-    else if (twh >= 1.5 && twh < 2) t = [0.5, 1, 1.5]
-    else if (twh >= 2 && twh < 3) t = [1, 2]
-    else if (twh >= 3 && twh < 4) t = [1, 2, 3]
-    else if (twh >= 4 && twh < 5) t = [2, 4]
+    if (twh > 0.5 && twh < 0.85) t = [0.25, 0.5]
+    else if (twh >= 0.85 && twh < 1.1) t = [0.25, 0.5, 0.75]
+    else if (twh >= 1.1 && twh < 1.6) t = [0.5, 1]
+    else if (twh >= 1.6 && twh < 2.2) t = [0.5, 1, 1.5]
+    else if (twh >= 2.2 && twh < 3.3) t = [1, 2]
+    else if (twh >= 3.3 && twh < 4.4) t = [1, 2, 3]
+    else if (twh >= 4.4 && twh < 5.5) t = [2, 4]
     return t.map(tick => [tick, tick / twh * 100])
 }
-console.log(ticks(max))
 
 function toTwh(number, decimals = 1) {
     return (number / 1000000).toLocaleString(undefined, { maximumFractionDigits: decimals })
@@ -53,8 +52,8 @@ function toTwh(number, decimals = 1) {
     </div>
     <div class="grid">
         <div class="tick-wrapper">
-            {#each ticks(max) as tick}
-            <div style="left: {tick[1]}%;">{tick[0].toLocaleString()} TWh</div>
+            {#each ticks(max) as tick, i}
+            <div style="left: {tick[1]}%;">{tick[0].toLocaleString()}{ i == 0 ? " TWh" : ""}</div>
             {/each}
         </div>
     </div>
