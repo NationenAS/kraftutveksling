@@ -41,7 +41,7 @@ onMount(async () => {
   fetch("https://statnett-utveksling.vercel.app/api/full")
     .then(r => r.json())
     .then(d => {
-      response = d // Backup data
+      response = d
       populate("", response)
     })
 })
@@ -76,8 +76,10 @@ function focusCountry(event) {
 
 </script>
 
+
 <div class="exchange-app">
   <h2>Live: Kraftutveksling med {countryNames[focused]} hittil i år</h2>
+  {#if response.length > 0}
   <p>Grafene viser hvor mye strøm som har blitt sendt og mottatt gjennom utenlandskablene så langt i 2023.</p>
   <div class=exchange>
     <div>
@@ -100,6 +102,9 @@ function focusCountry(event) {
   <div class="meta">
     1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
   </div>
+  {:else}
+  <p>Laster inn data...</p>
+  {/if}
 </div>
 
 <style>
