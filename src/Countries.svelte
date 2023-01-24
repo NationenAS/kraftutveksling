@@ -1,19 +1,19 @@
 <script>
 
-export let data
-export let all
+import { createEventDispatcher } from 'svelte'
+const dispatch = createEventDispatcher()
 
-let countryNames = {
-    se: 'Sverige',
-    dk: 'Danmark',
-    de: 'Tyskland',
-    en: 'England'
-}
-let exportValues = data.map(c => parseInt(c.SidebarViewModel.export))
-let importValues = data.map(c => parseInt(c.SidebarViewModel.import))
-let max = Math.max(...exportValues, ...importValues)
-let sumExport = exportValues.reduce((a, b) => { return a + b }, 0)
-let sumImport = importValues.reduce((a, b) => { return a + b }, 0)
+export let data
+export let countryNames
+export let focused
+
+$: countries = data.filter(c => c.Country !== "")
+$: exportValues = countries.map(c => parseInt(c.SidebarViewModel.export))
+$: importValues = countries.map(c => parseInt(c.SidebarViewModel.import))
+$: max = Math.max(...exportValues, ...importValues)
+$: sumExport = exportValues.reduce((a, b) => { return a + b }, 0)
+$: sumImport = importValues.reduce((a, b) => { return a + b }, 0)
+
 const ticks = (max) => { // REFACTOR
     let t = []
     let twh =  max / 1000000
@@ -31,39 +31,60 @@ function toTwh(number, decimals = 1) {
     return (number / 1000000).toLocaleString(undefined, { maximumFractionDigits: decimals })
 }
 
+function setCountry(c) {
+    dispatch('setCountry', {
+        country: c
+    })
+}
+
 </script>
 
-<div class="countries">
-    {#each data as country}
-    <div class="country">
-        <div>{countryNames[country.Country]}</div>
-        <div class="country-bars">
-            <div class="country-export" data-twh="{toTwh(country.SidebarViewModel.export)}" style="width: {country.SidebarViewModel.export / max * 100}%;"></div>
-            <div class="country-import" data-twh="{toTwh(country.SidebarViewModel.import)}" style="width: {country.SidebarViewModel.import / max * 100}%;"></div>
+<div class="exchange-per-country" class:focused="{focused !== ""}">
+    <h3>Utveksling per land</h3>
+    <p>Trykk på et land for å se mer. {#if focused !== ""}<span on:click={() => {setCountry("")}} on:keypress={() => {setCountry("")}}>Tilbakestill &circlearrowright;</span>{/if}</p>
+    <div class="countries">
+        <div class="grid">
+            <div class="tick-wrapper">
+                {#each ticks(max) as tick, i}
+                <div style="left: {tick[1]}%;">{tick[0].toLocaleString()}{ i == 0 ? " TWh" : ""}</div>
+                {/each}
+            </div>
         </div>
-    </div>
-    {/each}
-    <div class="country">
-        <div>Andre</div>
-        <div class="country-bars">
-            <div class="country-export" data-twh="{toTwh(all.summarised.export)}" style="width: {(all.summarised.export - sumExport) / max * 100}%;"></div>
-            <div class="country-import" data-twh="{toTwh(all.summarised.import)}" style="width: {(all.summarised.import - sumImport) / max * 100}%;"></div>
+        {#each data as country}
+        {#if country.Country === ""}
+        <div class="country">
+            <div>Andre</div>
+            <div class="country-bars">
+                <div class="country-export" data-twh="{toTwh(country.SidebarViewModel.export)}" style="width: {(country.SidebarViewModel.export - sumExport) / max * 100}%;"></div>
+                <div class="country-import" data-twh="{toTwh(country.SidebarViewModel.import)}" style="width: {(country.SidebarViewModel.import - sumImport) / max * 100}%;"></div>
+            </div>
         </div>
-    </div>
-    <div class="grid">
-        <div class="tick-wrapper">
-            {#each ticks(max) as tick, i}
-            <div style="left: {tick[1]}%;">{tick[0].toLocaleString()}{ i == 0 ? " TWh" : ""}</div>
-            {/each}
+        {:else}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="country" on:click={() => {setCountry(country.Country)}} class:focus="{focused == country.Country}">
+            <div>{countryNames[country.Country]}</div>
+            <div class="country-bars">
+                <div class="country-export" data-twh="{toTwh(country.SidebarViewModel.export)}" style="width: {country.SidebarViewModel.export / max * 100}%;"></div>
+                <div class="country-import" data-twh="{toTwh(country.SidebarViewModel.import)}" style="width: {country.SidebarViewModel.import / max * 100}%;"></div>
+            </div>
         </div>
+        {/if}
+        {/each}
     </div>
 </div>
 
 <style>
+.exchange-per-country {
+  margin-top: 40px;
+}
+span {
+    padding: 2px 4px;
+    text-decoration: underline;
+    cursor: pointer;
+}
 .countries {
     display: flex;
     flex-direction: column;
-    gap: 8px;
     margin-top: 23px;
     position: relative;
 }
@@ -92,6 +113,16 @@ function toTwh(number, decimals = 1) {
     display: grid;
     grid-template-columns: 85px 1fr;
     align-items: center;
+    padding-block: 4px;
+}
+.country:not(:last-child) {
+    cursor: pointer;
+}
+.country:not(:last-child):hover {
+    background: #eee;
+}
+.country.focus {
+    background: rgb(222, 222, 222);
 }
 .country-bars {
     display: flex;

@@ -23,26 +23,21 @@ $: data = {
     zero: 0
   }
 }
-let response = [],
-    focused = ""
-
-const countryNames = {
-    se: 'Sverige',
-    dk: 'Danmark',
-    de: 'Tyskland',
-    en: 'England',
-    nl: 'Nederland',
-    fi: 'Finland',
-    "": 'utlandet'
-}
+$: countries = []
+let focused = false
 
 // Get data
 onMount(async () => {
-  fetch("https://statnett-utveksling.vercel.app/api/full")
+  fetch("https://statnett-utveksling.vercel.app/api")
     .then(r => r.json())
     .then(d => {
-      response = d // Backup data
-      populate("", response)
+      
+      all(d.data)
+    })
+  fetch("https://statnett-utveksling.vercel.app/api/countries")
+    .then(r => r.json())
+    .then(d => {
+      individual(d)
     })
 })
 
@@ -57,8 +52,7 @@ function absToBar(value, index, start, span) { // start = timestamp, span = abso
   return bar
 }
 
-function populate(c, d) { // Country, Data
-  d = response[response.findIndex((x) => x.Country === c)]
+function all(d) {
   let span = d.SidebarViewModel.max + Math.abs(d.SidebarViewModel.min)
   let zero = d.SidebarViewModel.max / span * 100
   let bars = d.PhysicalFlowNetExchange.map((p, i) => absToBar(p, i, d.StartPointUTC, span))
@@ -68,16 +62,19 @@ function populate(c, d) { // Country, Data
   data.timespan.to = d.EndPointUTC
   data.css.zero = zero
 }
+function individual(d) {
+  countries = d
+}
 
 function focusCountry(event) {
+  all(countries[countries.findIndex((x) => x.Country === event.detail.country)])
   focused = event.detail.country
-  populate(event.detail.country, response)
 }
 
 </script>
 
 <div class="exchange-app">
-  <h2>Live: Kraftutveksling med {countryNames[focused]} hittil i år</h2>
+  <h2>Live: Kraftutveksling med utlandet hittil i år</h2>
   <p>Grafene viser hvor mye strøm som har blitt sendt og mottatt gjennom utenlandskablene så langt i 2023.</p>
   <div class=exchange>
     <div>
@@ -96,7 +93,14 @@ function focusCountry(event) {
     </div>
   </div>
   <Timeline data={data} />
-  <Countries data={response} on:setCountry={focusCountry} {countryNames} {focused} />
+  <div class="exchange-per-country">
+    <h3>Utveksling per land</h3>
+    {#if countries.length == 0}
+    <div><p>Laster land...</p></div>
+    {:else}
+    <Countries data={countries} all={data} on:setCountry={focusCountry} />
+    {/if}
+  </div>
   <div class="meta">
     1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
   </div>
@@ -158,6 +162,9 @@ h2 {
 :global(.exchange-app p) {
   margin: 0;
   line-height: 1.3;
+}
+.exchange-per-country {
+  margin-top: 40px;
 }
 .meta {
   margin-top: 30px;
