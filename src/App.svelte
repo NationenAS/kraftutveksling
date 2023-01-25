@@ -88,8 +88,8 @@ function focusCountry(event) {
     </div>
     <div class=percentage>
       <div>
-        <div class=export style="width: {data.summarised.exportPercent}%;">{(data.summarised.exportPercent).toFixed(0)}%</div>
-        <div class=import style="width: {data.summarised.importPercent}%;">{(data.summarised.importPercent).toFixed(0)}%</div>
+        <div class=export style="width: {data.summarised.exportPercent}%;">{(data.summarised.exportPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
+        <div class=import style="width: {data.summarised.importPercent}%;">{(data.summarised.importPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
       </div>
     </div>
     <div>
@@ -124,7 +124,7 @@ h2 {
 }
 .exchange {
   display: flex;
-  gap: 20px;
+  gap: 17px;
   margin-top: 30px;
 }
 .percentage {

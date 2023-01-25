@@ -85,7 +85,7 @@ span {
 .countries {
     display: flex;
     flex-direction: column;
-    margin-top: 23px;
+    margin-top: 25px;
     position: relative;
 }
 .grid {
