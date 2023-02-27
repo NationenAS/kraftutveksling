@@ -4,27 +4,13 @@ import { onMount } from "svelte";
 import Timeline from "./Timeline.svelte";
 import Countries from "./Countries.svelte";
 
-$: data = {
-  points: [],
-  summarised: {
-    max: 0,
-    min: 0,
-    export: 0,
-    import: 0,
-    netto: 0,
-    exportPercent: 0,
-    importPercent: 0
-  },
-  timespan: {
-    from: "0",
-    to: "0"
-  },
-  css: {
-    zero: 0
-  }
-}
 let response = [],
     focused = ""
+
+$: data = {
+  SidebarViewModel: {},
+  EndPointUTC: 0
+}
 
 const countryNames = {
     se: 'Sverige',
@@ -39,39 +25,24 @@ const countryNames = {
 // Get data
 onMount(async () => {
   fetch("https://statnett-utveksling.vercel.app/api/full")
-    .then(r => r.json())
-    .then(d => {
+    .then(r => r.json()).then(d => {
       response = d
-      populate("", response)
+      populate("")
     })
 })
 
-function absToBar(value, index, start, span) { // start = timestamp, span = absolute span from lowest to highest value
-  let date = new Date(start + (index * 86400000))
-  let bar = {
-    a: value,
-    h: Math.abs(value) / span * 100,
-    c: value > 0 ? "pos" : "neg",
-    d: date.toLocaleDateString(undefined, {month: 'short', day: 'numeric'})
+function populate(countryId) {
+  data = {
+    SidebarViewModel: {},
+    EndPointUTC: 0
   }
-  return bar
-}
-
-function populate(c, d) { // Country, Data
-  d = response[response.findIndex((x) => x.Country === c)]
-  let span = d.SidebarViewModel.max + Math.abs(d.SidebarViewModel.min)
-  let zero = d.SidebarViewModel.max / span * 100
-  let bars = d.PhysicalFlowNetExchange.map((p, i) => absToBar(p, i, d.StartPointUTC, span))
-  data.points = bars
-  data.summarised = d.SidebarViewModel
-  data.timespan.from = d.StartPointUTC
-  data.timespan.to = d.EndPointUTC
-  data.css.zero = zero
+  data = response[response.findIndex((x) => x.Country === countryId)]
+  data = data
 }
 
 function focusCountry(event) {
   focused = event.detail.country
-  populate(event.detail.country, response)
+  populate(event.detail.country)
 }
 
 </script>
@@ -84,23 +55,23 @@ function focusCountry(event) {
   <div class=exchange>
     <div>
       <h3>Eksport</h3>
-      <div class="twh">{(data.summarised.export / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
+      <div class="twh">{(data.SidebarViewModel.export / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
     </div>
     <div class=percentage>
       <div>
-        <div class=export style="width: {data.summarised.exportPercent}%;">{(data.summarised.exportPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
-        <div class=import style="width: {data.summarised.importPercent}%;">{(data.summarised.importPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
+        <div class=export style="width: {data.SidebarViewModel.exportPercent}%;">{(data.SidebarViewModel.exportPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
+        <div class=import style="width: {data.SidebarViewModel.importPercent}%;">{(data.SidebarViewModel.importPercent).toLocaleString(undefined, { maximumFractionDigits: 1 })}%</div>
       </div>
     </div>
     <div>
       <h3>Import</h3>
-      <div>{(data.summarised.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
+      <div>{(data.SidebarViewModel.import / 1000000).toLocaleString(undefined, { maximumFractionDigits: 2 })} TWh</div>
     </div>
   </div>
-  <Timeline data={data} />
+  <Timeline {data} />
   <Countries data={response} on:setCountry={focusCountry} {countryNames} {focused} />
   <div class="meta">
-    1 terawattime (TWh) = 1 000 000 megawattimer (MWh) = 1 000 000 000 kilowattimer (kWh). Oppdatert {(new Date(data.timespan.to)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
+    1 terawattime (TWh) = 1.000.000 megawattimer (MWh). 1 MWh = 1000 kilowattimer (kWh). Oppdatert {(new Date(data.EndPointUTC)).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}. Utvikling: Jarand Ullestad/Nationen. Kilde: Statnett.
   </div>
   {:else}
   <p>Laster inn data...</p>

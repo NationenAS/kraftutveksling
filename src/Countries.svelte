@@ -41,7 +41,7 @@ function setCountry(c) {
 
 <div class="exchange-per-country" class:focused="{focused !== ""}">
     <h3>Utveksling per land</h3>
-    <p>Trykk på et land for å se mer. {#if focused !== ""}<span on:click={() => {setCountry("")}} on:keypress={() => {setCountry("")}}>Tilbakestill &circlearrowright;</span>{/if}</p>
+    <p>Trykk på et land for å se mer. {#if focused !== ""}<span on:click={() => {setCountry("")}} on:keypress={() => {setCountry("")}}>&circlearrowright; Vis totalt</span>{/if}</p>
     <div class="countries">
         <div class="grid">
             <div class="tick-wrapper">
