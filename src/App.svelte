@@ -88,7 +88,6 @@ function focusCountry(event) {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   line-height: 1.3;
-  margin-block: 40px;
   border-top: 3px solid #4d6711;
   --import: #d9d4b6;
   --export: #404040;
